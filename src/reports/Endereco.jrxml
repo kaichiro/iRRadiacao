@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Endereco" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1789cdc7-5133-4dac-a51d-8e6f69576a2d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="218"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="776"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="iRRadiacaoV31"/>
+	<parameter name="idProj" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT prj.Id,
+	ender.Logradouro,
+	ender.Complemento,
+	ender.Numero NrEndereco,
+	ender.CEP,
+	ender.UF,
+	ender.Cidade,
+	ender.Bairro,
+	ender.Latitude,
+	ender.Longitude,
+	igm.Anual,
+	case trim(uc.Numero) when '' then uc.NumeroMedidor else uc.Numero end NrUnidadeConsumidora,
+	ce.Consumo,
+	ce.AnoReferencia + ce.MesReferencia ceEntidade,
+	ce.MesReferencia,
+	ce.AnoReferencia,
+	ce.ValorFatura
+FROM projeto prj
+	left join cliente clnt ON prj.Cliente = clnt.Id 
+	left join endereco ender ON clnt.Id = ender.Cliente 
+	left join irradiacaoglobalmes igm ON ender.IrradiacaoGlobalMes = igm.Id 
+	 left join unidadeconsumidora uc on ender.Id = uc.Endereco
+	left join consumoenergetico ce on uc.id = ce.Unidadeconsumidora
+	where prj.Id =  $P{idProj} ]]>
+	</queryString>
+	<field name="Id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="Id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="projeto"/>
+	</field>
+	<field name="Logradouro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Logradouro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Complemento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Complemento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="NrEndereco" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NrEndereco"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="CEP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CEP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="UF" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="UF"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Cidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Cidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Bairro" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="Bairro"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Latitude" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Latitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Longitude" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Longitude"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="endereco"/>
+	</field>
+	<field name="Anual" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Anual"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="irradiacaoglobalmes"/>
+	</field>
+	<field name="NrUnidadeConsumidora" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NrUnidadeConsumidora"/>
+	</field>
+	<field name="Consumo" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="Consumo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="consumoenergetico"/>
+	</field>
+	<field name="ceEntidade" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ceEntidade"/>
+	</field>
+	<field name="MesReferencia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="MesReferencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="consumoenergetico"/>
+	</field>
+	<field name="AnoReferencia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="AnoReferencia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="consumoenergetico"/>
+	</field>
+	<field name="ValorFatura" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="ValorFatura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="consumoenergetico"/>
+	</field>
+	<group name="Endereco">
+		<groupExpression><![CDATA[$F{CEP}]]></groupExpression>
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<group name="UnidadeConsumidora">
+		<groupExpression><![CDATA[$F{NrUnidadeConsumidora}]]></groupExpression>
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<group name="ConsumoEnergetico">
+		<groupHeader>
+			<band height="50"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="50"/>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="30" splitType="Stretch"/>
+	</detail>
+</jasperReport>

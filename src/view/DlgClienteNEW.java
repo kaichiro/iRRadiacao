@@ -1,0 +1,1183 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package view;
+
+import controller.CEPEnderecoCTRL;
+import controller.ClienteCTRL;
+import controller.ContatoCTRL;
+import controller.EnderecoCTRL;
+import controller.IrradiacaoGlobalMesCTRL;
+import controller.StatusCTRL;
+import controller.TipoPessoaCTRL;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultCellEditor;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+import model.bean.CEPEndereco;
+import model.bean.Cliente;
+import model.bean.Contato;
+import model.bean.Endereco;
+import model.bean.Status;
+import model.bean.TipoPessoa;
+import utils.Enumeradors;
+import utils.Enumeradors.UF;
+import utils.IconManager;
+
+/**
+ *
+ * @author KAI
+ */
+public class DlgClienteNEW extends javax.swing.JDialog {
+
+    private Cliente cliente = new Cliente();
+    private boolean FirstRun = true;
+    private List<Endereco> enderecos = new ArrayList<>();
+    private List<Contato> contatos = new ArrayList<>();
+    private Endereco enderecoEditar = new Endereco();
+
+    /**
+     * Creates new form DlgClienteNEW0
+     *
+     * @param parent
+     * @param modal
+     */
+    public DlgClienteNEW(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
+        initComponents();
+        setIcon();
+    }
+
+    public DlgClienteNEW(java.awt.Frame parent, boolean modal, Cliente pCliente) {
+        super(parent, modal);
+        initComponents();
+        if (pCliente != null) {
+            this.setCliente(pCliente);
+        }
+        this.IniciaForm();
+        this.FirstRun = false;
+        setIcon();
+    }
+
+    public void limpaTabela() {
+        for (int i = 0; i < tbEnderecos.getModel().getRowCount(); i++) {
+            ((DefaultTableModel) tbEnderecos.getModel()).removeRow(i);
+        }
+    }
+
+    private void setIcon() {
+        this.setIconImage(new ImageIcon(getClass().getResource("/image/specialist-user.png")).getImage());
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente pCliente) {
+        this.cliente = pCliente;
+        cmbxTipoPessoa.setEnabled(this.cliente.IsNew());
+        this.PopulaComponentesComObjetoCliente();
+        if (this.FirstRun) {
+            this.setEnderecos(EnderecoCTRL.BuscarPorCliente(this.cliente));
+            this.setContatos(ContatoCTRL.BuscarPorCliente(this.cliente));
+        }
+    }
+
+    public List<Endereco> getEnderecos() {
+        return enderecos;
+    }
+
+    public void setEnderecos(List<Endereco> enderecos) {
+        this.enderecos = enderecos;
+        this.PopulaJTableEnderecos();
+    }
+
+    public List<Contato> getContatos() {
+        return contatos;
+    }
+
+    public void setContatos(List<Contato> contatos) {
+        this.contatos = contatos;
+        this.PopulaJTableContatos();
+    }
+
+    public Endereco getEnderecoEditar() {
+        return enderecoEditar;
+    }
+
+    public Endereco getEndereco() {
+
+        this.enderecoEditar.setCEP(txtCEP.getText());
+        this.enderecoEditar.setNumero(txtNumero.getText());
+        this.enderecoEditar.setLogradouro(txtLogradouro.getText());
+        this.enderecoEditar.setComplemento(txtComplemento.getText());
+        this.enderecoEditar.setBairro(txtBairro.getText());
+        this.enderecoEditar.setCidade(txtCidade.getText());
+        this.enderecoEditar.setLatitude(Double.parseDouble(txtLatitude.getText().replace(",", ".")));
+        this.enderecoEditar.setLongitude(Double.parseDouble(txtLongitude.getText().replace(",", ".")));
+        this.enderecoEditar.setUF((UF) cmbxUF.getSelectedItem());
+        this.enderecoEditar.setCliente(this.getCliente());
+
+        return enderecoEditar;
+    }
+
+    public void setEnderecoEditar(Endereco enderecoEditar) {
+        this.enderecoEditar = enderecoEditar;
+
+        txtIdEndereco.setText(String.valueOf(this.enderecoEditar.getId()));
+        txtCEP.setText(this.enderecoEditar.getCEP());
+        txtNumero.setText(this.enderecoEditar.getNumero());
+        txtLogradouro.setText(this.enderecoEditar.getLogradouro());
+        txtComplemento.setText(this.enderecoEditar.getComplemento());
+        txtBairro.setText(this.enderecoEditar.getBairro());
+        txtCidade.setText(this.enderecoEditar.getCidade());
+        txtLatitude.setText(String.valueOf(this.enderecoEditar.getLatitude()).replace(".", ","));
+        txtLongitude.setText(String.valueOf(this.enderecoEditar.getLongitude()).replace(".", ","));
+        cmbxUF.setSelectedItem(this.enderecoEditar.getUF());
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        pnlCabecalho = new javax.swing.JPanel();
+        pnlBotoes = new javax.swing.JPanel();
+        btnGravar = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        txtId = new javax.swing.JFormattedTextField();
+        txtCliente = new javax.swing.JFormattedTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        cmbxStatus = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        cmbxTipoPessoa = new javax.swing.JComboBox<>();
+        tpCliente = new javax.swing.JTabbedPane();
+        pnlGeral = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txtIM = new javax.swing.JFormattedTextField();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtIE_RG = new javax.swing.JFormattedTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtRazaoSocial_Nome = new javax.swing.JFormattedTextField();
+        txtNomeFantasia_Apelido = new javax.swing.JFormattedTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtDataNascimento = new com.toedter.calendar.JDateChooser();
+        txtCNPJ = new javax.swing.JFormattedTextField();
+        txtCPF = new javax.swing.JFormattedTextField();
+        pnlEnderecos = new javax.swing.JPanel();
+        btnIncluirEndereco = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbEnderecos = new javax.swing.JTable();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        txtCEP = new javax.swing.JTextField();
+        txtLogradouro = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        txtComplemento = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        txtNumero = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtBairro = new javax.swing.JTextField();
+        txtCidade = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        cmbxUF = new javax.swing.JComboBox<>();
+        txtLatitude = new javax.swing.JFormattedTextField();
+        txtLongitude = new javax.swing.JFormattedTextField();
+        jLabel21 = new javax.swing.JLabel();
+        txtIdEndereco = new javax.swing.JTextField();
+        btnBuscarCEP = new javax.swing.JButton();
+        btnBuscarIrradiacao = new javax.swing.JButton();
+        lblIrradiacao = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        pnlContatos = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblContatos = new javax.swing.JTable();
+        btnIncluirContato = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Cliente");
+        setResizable(false);
+
+        pnlCabecalho.setBorder(javax.swing.BorderFactory.createTitledBorder("Geral"));
+
+        pnlBotoes.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnGravar.setText("Gravar");
+        btnGravar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGravarActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlBotoesLayout = new javax.swing.GroupLayout(pnlBotoes);
+        pnlBotoes.setLayout(pnlBotoesLayout);
+        pnlBotoesLayout.setHorizontalGroup(
+            pnlBotoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotoesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlBotoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGravar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlBotoesLayout.setVerticalGroup(
+            pnlBotoesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotoesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnGravar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCancelar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel1.setText("Id:");
+
+        txtId.setEditable(false);
+        txtId.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtId.setEnabled(false);
+        txtId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtIdActionPerformed(evt);
+            }
+        });
+
+        txtCliente.setEditable(false);
+        txtCliente.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtCliente.setEnabled(false);
+
+        jLabel2.setText("Cliente:");
+
+        jLabel9.setText("Status:");
+
+        cmbxStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbxStatusActionPerformed(evt);
+            }
+        });
+
+        jLabel10.setText("Tipo Pessoa:");
+
+        cmbxTipoPessoa.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbxTipoPessoaItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlCabecalhoLayout = new javax.swing.GroupLayout(pnlCabecalho);
+        pnlCabecalho.setLayout(pnlCabecalhoLayout);
+        pnlCabecalhoLayout.setHorizontalGroup(
+            pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCabecalhoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel9))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlCabecalhoLayout.createSequentialGroup()
+                        .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cmbxTipoPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCliente))
+                .addGap(18, 18, 18)
+                .addComponent(pnlBotoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        pnlCabecalhoLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel1, jLabel2, jLabel9});
+
+        pnlCabecalhoLayout.setVerticalGroup(
+            pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCabecalhoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlCabecalhoLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2))
+                    .addGroup(pnlCabecalhoLayout.createSequentialGroup()
+                        .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cmbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel9))
+                            .addGroup(pnlCabecalhoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10)
+                                .addComponent(cmbxTipoPessoa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(pnlBotoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        pnlCabecalhoLayout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, txtId});
+
+        pnlGeral.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel6.setText("Data Nascimento:");
+
+        jLabel5.setText("I.M.:");
+
+        jLabel7.setText("I.E. / R.G.:");
+
+        jLabel8.setText("CNPJ / CPF:");
+
+        jLabel3.setText("Razão Social / Nome:");
+
+        jLabel4.setText("Nome Fantasia / Apelido:");
+
+        try {
+            txtCNPJ.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            txtCPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        javax.swing.GroupLayout pnlGeralLayout = new javax.swing.GroupLayout(pnlGeral);
+        pnlGeral.setLayout(pnlGeralLayout);
+        pnlGeralLayout.setHorizontalGroup(
+            pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGeralLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlGeralLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNomeFantasia_Apelido))
+                    .addGroup(pnlGeralLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtRazaoSocial_Nome))
+                    .addGroup(pnlGeralLayout.createSequentialGroup()
+                        .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlGeralLayout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addGap(272, 272, 272)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIE_RG, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlGeralLayout.createSequentialGroup()
+                                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(pnlGeralLayout.createSequentialGroup()
+                                        .addComponent(jLabel5)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtIM, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 83, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        pnlGeralLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel3, jLabel4});
+
+        pnlGeralLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel5, jLabel8});
+
+        pnlGeralLayout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel6, jLabel7});
+
+        pnlGeralLayout.setVerticalGroup(
+            pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlGeralLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtNomeFantasia_Apelido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtRazaoSocial_Nome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel8)
+                    .addComponent(txtIE_RG, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlGeralLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(txtIM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(txtDataNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(txtCNPJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(txtCPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(205, Short.MAX_VALUE))
+        );
+
+        tpCliente.addTab("Geral", pnlGeral);
+
+        btnIncluirEndereco.setText("Incluir Endereço");
+        btnIncluirEndereco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncluirEnderecoActionPerformed(evt);
+            }
+        });
+
+        tbEnderecos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbEnderecos.setName(""); // NOI18N
+        tbEnderecos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbEnderecosMouseClicked(evt);
+            }
+        });
+        tbEnderecos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tbEnderecosKeyPressed(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tbEnderecos);
+
+        jLabel12.setText("*Clique duas vezes no Id do registro para alterar suas informações.");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Editar Informações Endereço"));
+
+        jLabel11.setText("CEP:");
+
+        jLabel13.setText("Logradouro:");
+
+        jLabel14.setText("Complemento:");
+
+        jLabel15.setText("Número:");
+
+        jLabel16.setText("Bairro:");
+
+        jLabel17.setText("Cidade:");
+
+        jLabel18.setText("UF:");
+
+        jLabel19.setText("Latitude:");
+
+        jLabel20.setText("Longitude:");
+
+        txtLatitude.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000000"))));
+
+        txtLongitude.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.000000"))));
+
+        jLabel21.setText("Id:");
+
+        txtIdEndereco.setEditable(false);
+        txtIdEndereco.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtIdEndereco.setEnabled(false);
+
+        btnBuscarCEP.setText("Buscar CEP");
+        btnBuscarCEP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarCEPActionPerformed(evt);
+            }
+        });
+
+        btnBuscarIrradiacao.setText("Buscar Irradiação");
+        btnBuscarIrradiacao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarIrradiacaoActionPerformed(evt);
+            }
+        });
+
+        lblIrradiacao.setText("lblIrradiacao");
+        lblIrradiacao.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnBuscarIrradiacao, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblIrradiacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel17)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCidade))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtComplemento))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtLogradouro))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel21)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtIdEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnBuscarCEP, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel20)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtLongitude, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel18)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(cmbxUF, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jLabel19)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtLatitude, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel13, jLabel14, jLabel16, jLabel21});
+
+        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {jLabel18, jLabel19, jLabel20});
+
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtCEP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIdEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel21)
+                    .addComponent(jLabel15)
+                    .addComponent(txtNumero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18)
+                    .addComponent(cmbxUF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscarCEP))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13)
+                    .addComponent(txtLogradouro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19)
+                    .addComponent(txtLatitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(txtComplemento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20)
+                    .addComponent(txtLongitude, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17)
+                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarIrradiacao)
+                    .addComponent(lblIrradiacao))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        jLabel22.setText("*Tecle ENTER no registro abaixo (Endereços) para gerenciar o cadastro de Unidades Consumidoras (padrão de energia).");
+
+        javax.swing.GroupLayout pnlEnderecosLayout = new javax.swing.GroupLayout(pnlEnderecos);
+        pnlEnderecos.setLayout(pnlEnderecosLayout);
+        pnlEnderecosLayout.setHorizontalGroup(
+            pnlEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEnderecosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(pnlEnderecosLayout.createSequentialGroup()
+                        .addGroup(pnlEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnIncluirEndereco))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        pnlEnderecosLayout.setVerticalGroup(
+            pnlEnderecosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlEnderecosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnIncluirEndereco)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        tpCliente.addTab("Endereços", pnlEnderecos);
+
+        tblContatos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tblContatos);
+
+        btnIncluirContato.setText("Incluir Contato");
+        btnIncluirContato.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIncluirContatoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnlContatosLayout = new javax.swing.GroupLayout(pnlContatos);
+        pnlContatos.setLayout(pnlContatosLayout);
+        pnlContatosLayout.setHorizontalGroup(
+            pnlContatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlContatosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlContatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 756, Short.MAX_VALUE)
+                    .addGroup(pnlContatosLayout.createSequentialGroup()
+                        .addComponent(btnIncluirContato)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        pnlContatosLayout.setVerticalGroup(
+            pnlContatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlContatosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnIncluirContato)
+                .addContainerGap())
+        );
+
+        tpCliente.addTab("Contatos", pnlContatos);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnlCabecalho, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(tpCliente))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlCabecalho, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tpCliente)
+                .addContainerGap())
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void cmbxTipoPessoaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbxTipoPessoaItemStateChanged
+        if (cmbxTipoPessoa.getSelectedItem() != null) {
+            if (cmbxTipoPessoa.getSelectedItem().toString().toLowerCase().endsWith("sica")) {
+//                try {
+////                    txtCNPJ_CPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-##")));
+//                } catch (ParseException ex) {
+//                    System.out.println("Erro eo tentar mascarar o campo CPF: " + ex);
+//                    Logger.getLogger(DlgClienteNEW.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                txtDataNascimento.setEnabled(true);
+//            } else {
+//                try {
+////                    txtCNPJ_CPF.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##.###.###/####-##")));
+//                } catch (ParseException ex) {
+//                    System.out.println("Erro eo tentar mascarar o campo CNPJ: " + ex);
+//                    Logger.getLogger(DlgClienteNEW.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//                txtDataNascimento.setEnabled(false);
+            }
+        }
+    }//GEN-LAST:event_cmbxTipoPessoaItemStateChanged
+
+    private void cmbxStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbxStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbxStatusActionPerformed
+
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtIdActionPerformed
+
+    private void btnGravarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGravarActionPerformed
+        this.PersistirCliente();
+    }//GEN-LAST:event_btnGravarActionPerformed
+
+    private void btnIncluirEnderecoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirEnderecoActionPerformed
+        this.AdicionarEndereco();
+        this.setEnderecoEditar(new Endereco());
+
+    }//GEN-LAST:event_btnIncluirEnderecoActionPerformed
+
+    private void btnIncluirContatoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIncluirContatoActionPerformed
+        this.AdicionarContato();
+    }//GEN-LAST:event_btnIncluirContatoActionPerformed
+
+    private void tbEnderecosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbEnderecosKeyPressed
+        if ((evt.getKeyChar() == KeyEvent.VK_ENTER)) {
+            this.AbrirUnidadeConsumidora((int) tbEnderecos.getValueAt(tbEnderecos.getSelectedRow(), 0));
+            evt.consume();
+        }
+    }//GEN-LAST:event_tbEnderecosKeyPressed
+
+    private void tbEnderecosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbEnderecosMouseClicked
+        if (evt.getClickCount() == 2) {
+//            this.AbrirUnidadeConsumidora((int) tbEnderecos.getValueAt(tbEnderecos.getSelectedRow(), 0));
+            int idEnder = (int) tbEnderecos.getValueAt(tbEnderecos.getSelectedRow(), 0);
+            this.setEnderecoEditar(idEnder > 0 ? EnderecoCTRL.BuscarPorID(idEnder) : new Endereco(0));
+        }
+    }//GEN-LAST:event_tbEnderecosMouseClicked
+
+    private void btnBuscarCEPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCEPActionPerformed
+        DlgPesquisaEntidade dlg = new DlgPesquisaEntidade(null, true, CEPEndereco.class, null, null, true);
+        dlg.setVisible(true);
+        dlg.toFront();
+        if (dlg.getIdSelecionado() > 0) {
+            CEPEndereco cepEnder = CEPEnderecoCTRL.BuscarPorId(dlg.getIdSelecionado());
+            System.out.println("CEP: " + cepEnder.toString());
+            System.out.println("End: " + this.getEnderecoEditar().toString());
+            this.getEnderecoEditar().setBairro(cepEnder.getBairro());
+            this.getEnderecoEditar().setCEP(cepEnder.getCEP());
+            this.getEnderecoEditar().setCidade(cepEnder.getCidade());
+            this.getEnderecoEditar().setComplemento(cepEnder.getComplemento());
+            this.getEnderecoEditar().setLatitude(cepEnder.getLatitude());
+            this.getEnderecoEditar().setLogradouro(cepEnder.getLogradouro());
+            this.getEnderecoEditar().setLongitude(cepEnder.getLongitude());
+            this.getEnderecoEditar().setUF(cepEnder.getUF());
+
+            txtBairro.setText(this.getEnderecoEditar().getBairro());
+            txtCEP.setText(this.getEnderecoEditar().getCEP());
+            txtCidade.setText(this.getEnderecoEditar().getCidade());
+            txtComplemento.setText(this.getEnderecoEditar().getComplemento());
+            txtLatitude.setText(String.valueOf(this.getEnderecoEditar().getLatitude()).replace(",", "").replace(".", ","));
+            txtLogradouro.setText(this.getEnderecoEditar().getLogradouro());
+            txtLongitude.setText(String.valueOf(this.getEnderecoEditar().getLongitude()).replace(",", "").replace(".", ","));
+            cmbxUF.setSelectedItem(this.getEnderecoEditar().getUF());
+        }
+    }//GEN-LAST:event_btnBuscarCEPActionPerformed
+
+    private void btnBuscarIrradiacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarIrradiacaoActionPerformed
+        this.BuscarCoordenadas(this.enderecoEditar.getLatitude(), this.enderecoEditar.getLongitude());
+        lblIrradiacao.setText(this.enderecoEditar.getIrradiacaoGlobalMes().getId() + "");
+    }//GEN-LAST:event_btnBuscarIrradiacaoActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(DlgClienteNEW.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        //</editor-fold>
+
+        /* Create and display the dialog */
+        java.awt.EventQueue.invokeLater(() -> {
+            DlgClienteNEW dialog = new DlgClienteNEW(new javax.swing.JFrame(), true);
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            dialog.setVisible(true);
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscarCEP;
+    private javax.swing.JButton btnBuscarIrradiacao;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnGravar;
+    private javax.swing.JButton btnIncluirContato;
+    private javax.swing.JButton btnIncluirEndereco;
+    private javax.swing.JComboBox<model.bean.Status> cmbxStatus;
+    private javax.swing.JComboBox<model.bean.TipoPessoa> cmbxTipoPessoa;
+    private javax.swing.JComboBox<Enumeradors.UF> cmbxUF;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblIrradiacao;
+    private javax.swing.JPanel pnlBotoes;
+    private javax.swing.JPanel pnlCabecalho;
+    private javax.swing.JPanel pnlContatos;
+    private javax.swing.JPanel pnlEnderecos;
+    private javax.swing.JPanel pnlGeral;
+    private javax.swing.JTable tbEnderecos;
+    private javax.swing.JTable tblContatos;
+    private javax.swing.JTabbedPane tpCliente;
+    private javax.swing.JTextField txtBairro;
+    private javax.swing.JTextField txtCEP;
+    private javax.swing.JFormattedTextField txtCNPJ;
+    private javax.swing.JFormattedTextField txtCPF;
+    private javax.swing.JTextField txtCidade;
+    private javax.swing.JFormattedTextField txtCliente;
+    private javax.swing.JTextField txtComplemento;
+    private com.toedter.calendar.JDateChooser txtDataNascimento;
+    private javax.swing.JFormattedTextField txtIE_RG;
+    private javax.swing.JFormattedTextField txtIM;
+    private javax.swing.JFormattedTextField txtId;
+    private javax.swing.JTextField txtIdEndereco;
+    private javax.swing.JFormattedTextField txtLatitude;
+    private javax.swing.JTextField txtLogradouro;
+    private javax.swing.JFormattedTextField txtLongitude;
+    private javax.swing.JFormattedTextField txtNomeFantasia_Apelido;
+    private javax.swing.JTextField txtNumero;
+    private javax.swing.JFormattedTextField txtRazaoSocial_Nome;
+    // End of variables declaration//GEN-END:variables
+
+    private void PopulaObjetoClienteComInformacoesDosComponentes() {
+        this.getCliente().setStatus((Status) cmbxStatus.getSelectedItem());
+        this.getCliente().setTipoPessoa((TipoPessoa) cmbxTipoPessoa.getSelectedItem());
+
+//        this.getCliente().setCNPJ_CPF(txtCNPJ_CPF.getText());
+        if (this.getCliente().getTipoPessoa().getDescricao().endsWith("sica")) {
+            this.getCliente().setDataNascimento(new java.sql.Date(txtDataNascimento.getDate().getYear(), txtDataNascimento.getDate().getMonth(), txtDataNascimento.getDate().getDay()));
+            this.getCliente().setCNPJ_CPF(txtCNPJ.getText());
+        } else {
+            this.getCliente().setCNPJ_CPF(txtCPF.getText());
+        }
+        this.getCliente().setIE_RG(txtIE_RG.getText());
+        this.getCliente().setIM(txtIM.getText());
+        if (!this.getCliente().IsNew()) {
+            this.getCliente().setId(Integer.parseInt(txtId.getText()));
+        }
+        this.getCliente().setNomeFantasia_Apelido(txtNomeFantasia_Apelido.getText());
+        this.getCliente().setRazaoSocial_Nome(txtRazaoSocial_Nome.getText());
+    }
+
+    private void IniciaForm() {
+        StatusCTRL.BuscaTodos().forEach((Status sts) -> {
+            cmbxStatus.addItem(sts);
+        });
+
+        if (this.FirstRun) {
+            TipoPessoaCTRL.BuscaTodos().forEach((TipoPessoa tpPess) -> {
+                cmbxTipoPessoa.addItem(tpPess);
+            });
+        } else {
+            cmbxTipoPessoa.addItem(TipoPessoaCTRL.BuscaPorDescricao(this.getCliente().getTipoPessoa().getDescricao()).get(0));
+        }
+
+        for (Enumeradors.UF value : Enumeradors.UF.values()) {
+            cmbxUF.addItem(value);
+        }
+
+        new IconManager().SetaIcones(new JButton[]{btnGravar, btnCancelar});
+    }
+
+    private void PersistirCliente() {
+        this.PopulaObjetoClienteComInformacoesDosComponentes();
+        this.setCliente(ClienteCTRL.Gravar(this.getCliente(), null));
+        this.PersistirEnderecoNEW();
+        //this.PersistirEnderecos();
+        this.PersistirContatos();
+    }
+
+    private void PopulaComponentesComObjetoCliente() {
+//        txtCNPJ_CPF.setText(this.getCliente().getCNPJ_CPF());
+        txtIE_RG.setText(this.getCliente().getIE_RG());
+        txtIM.setText(this.getCliente().getIM());
+        txtId.setText(String.valueOf(this.getCliente().getId()));
+        txtNomeFantasia_Apelido.setText(this.getCliente().getNomeFantasia_Apelido());
+        txtRazaoSocial_Nome.setText(this.getCliente().getRazaoSocial_Nome());
+        cmbxStatus.setSelectedItem(this.getCliente().getStatus());
+        cmbxTipoPessoa.setSelectedItem(this.getCliente().getTipoPessoa());
+        if (this.getCliente().getTipoPessoa() != null) {
+            if (this.getCliente().getTipoPessoa().getDescricao().endsWith("sica")) {
+                txtDataNascimento.setDate(this.getCliente().getDataNascimento());
+                txtCPF.setText(this.getCliente().getCNPJ_CPF());
+            } else {
+                txtCNPJ.setText(this.getCliente().getCNPJ_CPF());
+            }
+        }
+    }
+
+    private void PopulaJTableEnderecos() {
+        List<Endereco> enderecosLocal = this.getEnderecos();
+        String[] colunas = new String[]{"Id", "CEP", "Logradouro", "Complemento", "Número", "Cidade", "UF"};
+        Object[][] dados = new Object[enderecosLocal.size()][colunas.length];
+        for (int linha = 0; linha < enderecosLocal.size(); linha++) {
+            int coluna = 0;
+            dados[linha][coluna++] = enderecosLocal.get(linha).getId();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getCEP();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getLogradouro();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getComplemento();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getNumero();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getCidade();
+            dados[linha][coluna++] = enderecosLocal.get(linha).getUF();
+        }
+        DefaultTableModel mdl = new DefaultTableModel(dados, colunas) {
+            boolean[] canEdit = new boolean[]{
+                false, false, false, false, false, false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        tbEnderecos.setModel(mdl);
+        tbEnderecos.setAutoCreateRowSorter(true);
+        tbEnderecos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tbEnderecos.setShowGrid(true);
+        tbEnderecos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        int xx = 0;
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.04));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.10));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.25));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.25));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.07));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.20));
+        tbEnderecos.getColumnModel().getColumn(xx).setCellEditor(new DefaultCellEditor(new JComboBox(Enumeradors.UF.values())));
+        tbEnderecos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tbEnderecos.getParent().getWidth() * 0.08));
+    }
+
+    private void AdicionarEndereco() {
+        this.enderecos.removeAll(this.enderecos);
+        List<Endereco> enders = new ArrayList<>();
+        for (int i = 0; i < tbEnderecos.getModel().getRowCount(); i++) {
+
+            Endereco e = new Endereco();
+            int xx = 0;
+            e.setId((int) tbEnderecos.getValueAt(i, xx++));
+            e.setCEP((String) tbEnderecos.getValueAt(i, xx++));
+            e.setLogradouro((String) tbEnderecos.getValueAt(i, xx++));
+            e.setComplemento((String) tbEnderecos.getValueAt(i, xx++));
+            e.setNumero((String) tbEnderecos.getValueAt(i, xx++));
+            e.setCidade((String) tbEnderecos.getValueAt(i, xx++));
+            e.setUF((Enumeradors.UF) tbEnderecos.getValueAt(i, xx++));
+            e.setCliente(this.getCliente());
+            enders.add(e);
+
+        }
+        Endereco e = new Endereco();
+        e = getEndereco();
+        e.setId(0);
+        enders.add(e);
+        this.setEnderecos(enders);
+    }
+
+//    private void PersistirEnderecos() {
+//        this.enderecos.removeAll(this.enderecos);
+//        for (int i = 0; i < tbEnderecos.getRowCount(); i++) {
+//            int xx = 0;
+//            Endereco e = new Endereco();
+//            e.setId((int) tbEnderecos.getValueAt(i, xx++));
+//            e.setCEP((String) tbEnderecos.getValueAt(i, xx++));
+//            e.setLogradouro((String) tbEnderecos.getValueAt(i, xx++));
+//            e.setComplemento((String) tbEnderecos.getValueAt(i, xx++));
+//            e.setNumero((String) tbEnderecos.getValueAt(i, xx++));
+//            e.setCidade((String) tbEnderecos.getValueAt(i, xx++));
+//            e.setUF((Enumeradors.UF) tbEnderecos.getValueAt(i, xx++));
+//            e.setCliente(this.getCliente());
+//            EnderecoCTRL.Gravar(e);
+//        }
+//        this.setEnderecos(EnderecoCTRL.BuscarPorCliente(this.getCliente()));
+//        this.PopulaJTableEnderecos();
+//    }
+    private void PersistirContatos() {
+        this.contatos.removeAll(this.getContatos());
+        for (int i = 0; i < tblContatos.getRowCount(); i++) {
+            ContatoCTRL.Gravar(
+                    new Contato(
+                            (int) tblContatos.getValueAt(i, 0),
+                            String.valueOf(tblContatos.getValueAt(i, 1)),
+                            this.getCliente()
+                    )
+            );
+        }
+        this.setContatos(ContatoCTRL.BuscarPorCliente(this.cliente));
+        this.PopulaJTableContatos();
+    }
+
+    private void PopulaJTableContatos() {
+        List<Contato> contatosLocal = this.getContatos();
+        String[] colunas = new String[]{"Id", "Descrição"};
+        Object[][] dados = new Object[contatosLocal.size()][colunas.length];
+        for (int linha = 0; linha < contatosLocal.size(); linha++) {
+            int coluna = 0;
+            dados[linha][coluna++] = contatosLocal.get(linha).getId();
+            dados[linha][coluna++] = contatosLocal.get(linha).getDescricao();
+        }
+        DefaultTableModel mdl = new DefaultTableModel(dados, colunas) {
+            boolean[] canEdit = new boolean[]{
+                false, true
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit[columnIndex];
+            }
+        };
+        tblContatos.setModel(mdl);
+        tblContatos.setAutoCreateRowSorter(true);
+        tblContatos.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tblContatos.setShowGrid(true);
+        tblContatos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        int xx = 0;
+        tblContatos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tblContatos.getParent().getWidth() * 0.07));
+        tblContatos.getColumnModel().getColumn(xx++).setPreferredWidth((int) (tblContatos.getParent().getWidth() * 0.90));
+    }
+
+    private void AdicionarContato() {
+        this.contatos.removeAll(this.getContatos());
+        List<Contato> contatosLocal = new ArrayList<>();
+        for (int i = 0; i < tblContatos.getRowCount(); i++) {
+            contatosLocal.add(new Contato((int) tblContatos.getValueAt(i, 0), String.valueOf(tblContatos.getValueAt(i, 1)), this.getCliente()));
+        }
+        contatosLocal.add(new Contato(0, "", this.getCliente()));
+        this.setContatos(contatosLocal);
+    }
+
+    private void AbrirUnidadeConsumidora(int pIdUC) {
+        if (pIdUC > 0) {
+            DlgUnidadeConsumidora dlg = new DlgUnidadeConsumidora(null, true, EnderecoCTRL.BuscarPorID(pIdUC));
+            dlg.setVisible(true);
+            dlg.toFront();
+        }
+    }
+
+    private void PersistirEnderecoNEW() {
+        List<Endereco> enderecosLocal = this.getEnderecos();
+
+        for (int linha = 0; linha < enderecosLocal.size(); linha++) {
+            Endereco e = enderecosLocal.get(linha);
+            // e.setBairro(enderecosLocal[linha].getBairro.getText());
+            //e.setCEP(txtCEP.getText());
+            //e.setCidade(txtCidade.getText());
+            // e.setCliente(this.getCliente());
+            //e.setComplemento(txtComplemento.getText());
+            // e.setId(Integer.parseInt(txtIdEndereco.getText()));
+            //      /  e.setIrradiacaoGlobalMes(txt.getText());
+            //e.setLatitude(Utilitarios.ConverteTextoEmDouble(txtLatitude.getText()));
+            // e.setLongitude(Utilitarios.ConverteTextoEmDouble(txtLongitude.getText()));
+            // e.setLogradouro(txtLogradouro.getText());
+            // e.setNumero(txtNumero.getText());
+            // e.setUF((Enumeradors.UF) cmbxUF.getSelectedItem());
+            EnderecoCTRL.Gravar(e);
+        }
+
+        this.PopulaJTableEnderecos();
+    }
+
+    private void BuscarCoordenadas(double pLatitude, double pLongitude) {
+        this.enderecoEditar.setIrradiacaoGlobalMes(IrradiacaoGlobalMesCTRL.BuscarPorCoordenadas(pLatitude, pLongitude));
+
+    }
+
+}

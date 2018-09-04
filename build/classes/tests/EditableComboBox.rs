@@ -1,0 +1,4 @@
+tests.EditableComboBox
+tests.BookEntry
+tests.ComboBoxEditorExample
+tests.ComboBoxEditorExample$ImagePanel

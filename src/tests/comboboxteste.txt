@@ -1,0 +1,34 @@
+//            AutoCompleteDecoratorCombo.decorate(cmbxLocalizador);
+//            DefaultComboBoxModel model = (DefaultComboBoxModel) cmbxLocalizador.getModel();
+//            model.removeAllElements();
+//
+//            String s = ((JTextField) cmbxLocalizador.getEditor().getEditorComponent()).getText();
+//            System.out.println(s);
+//
+//            List<Modulo> listaModulo = ModuloCTRL.BuscaPorDescricao(s, 0);
+//            for (int i = 0; i < listaModulo.size(); i++) {
+//                model.addElement(listaModulo.get(i));
+//            }
+//            cmbxLocalizador.setModel(model);
+
+
+
+    public void PopulaComboBoxModulo() {
+
+        DefaultComboBoxModel mdlCmbx = (DefaultComboBoxModel) cmbxLocalizador.getModel();
+        mdlCmbx.removeAllElements();
+
+        String pPesquisa = ((JTextField) cmbxLocalizador.getEditor().getEditorComponent()).getText();
+        System.out.println(pPesquisa);
+
+        this.modulosLocalizados.removeAll(this.modulosLocalizados);
+        this.modulosLocalizados = ModuloCTRL.BuscaPorDescricao(pPesquisa, (int) spnrLimit.getValue());
+
+//        modulos.add(new Modulo());
+        this.modulosLocalizados.forEach((Modulo m) -> {
+            mdlCmbx.addElement(m);
+        });
+
+        cmbxLocalizador.setModel(mdlCmbx);
+
+    }
